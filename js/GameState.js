@@ -6,6 +6,7 @@ GameState.prototype.preload = function() {
     //this.game.load.image('player', '/assets/gfx/player.png');
     this.game.load.spritesheet('player', 'assets/img/magi.png', 32, 32)
     this.game.load.image('bullet', 'assets/img/tanks/bullet.png');
+    this.game.load.spritesheet('explosion', 'assets/img/tanks/explosion.png', 64, 64, 23);
 
     game.load.tilemap('map', 'assets/maps/map-desert.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.image('tiles', 'assets/img/tiles/tmw_desert_spacing.png');
@@ -80,9 +81,15 @@ GameState.prototype.update = function() {
     this.modeText.setText('mode - ' + this.game.gameMode);
 
     this.game.physics.arcade.collide(this.player, this.mapLayer);
+    this.game.physics.arcade.overlap(this.game.bulletPool, this.mapLayer, this.bulletHitWall);
 
     this.updateEditor();
 };
+
+GameState.prototype.bulletHitWall = function(bullet, wall)
+{
+    bullet.hit(wall);
+}
 
 // Set up keyboard input
 GameState.prototype.createCursorKeys = function () {
