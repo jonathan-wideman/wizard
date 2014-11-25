@@ -16,6 +16,9 @@ GameState.prototype.preload = function() {
 
 // Setup the example
 GameState.prototype.create = function() {
+    // Set volume
+    this.game.sound.volume = 0.01;
+
     // Set stage background color
     this.game.stage.backgroundColor = 0x4488cc;
 
@@ -34,13 +37,6 @@ GameState.prototype.create = function() {
     // Game modes, woo!
     this.game.gameMode = 'shooty';
 
-    /*
-    // Create a follower
-    this.game.add.existing(
-        new Follower(this.game, this.game.width/2, this.game.height/2, this.game.input)
-    );
-    */
-
     // Simulate a pointer click/tap input at the center of the stage
     // when the example begins running.
     this.game.input.x = this.game.width/2;
@@ -52,6 +48,14 @@ GameState.prototype.create = function() {
     this.game.physics.enable(this.player);
     //this.game.physics.arcade.gravity.y = 250;
     this.player.body.collideWorldBounds = true;
+
+
+    // Create a follower
+    this.follower = new Follower(this.game, this.game.width/2, this.game.height/2, this.player)
+    this.game.add.existing(this.follower);
+    this.game.physics.enable(this.follower);
+    this.follower.body.collideWorldBounds = true;
+
 
     // Show FPS
     this.game.time.advancedTiming = true;
@@ -81,14 +85,28 @@ GameState.prototype.update = function() {
     this.modeText.setText('mode - ' + this.game.gameMode);
 
     this.game.physics.arcade.collide(this.player, this.mapLayer);
+    this.game.physics.arcade.collide(this.player, this.follower);
+    this.game.physics.arcade.collide(this.follower, this.mapLayer);
     this.game.physics.arcade.overlap(this.game.bulletPool, this.mapLayer, this.bulletHitWall);
+    this.game.physics.arcade.overlap(this.game.bulletPool, this.follower, this.bulletHitFollower);
 
     this.updateEditor();
 };
 
 GameState.prototype.bulletHitWall = function(bullet, wall)
 {
+    // console.log(bullet);
+    // console.log(wall);
     bullet.hit(wall);
+}
+
+// for some odd reason the follower is always first, even though the docs say otherwise.
+// try updating phaser version?
+GameState.prototype.bulletHitFollower = function(follower, bullet)
+{
+    // console.log(bullet);
+    // console.log(follower);
+    bullet.hit(follower);
 }
 
 // Set up keyboard input

@@ -13,8 +13,8 @@ var Follower = function(game, x, y, target) {
     this.game.physics.enable(this, Phaser.Physics.ARCADE);
 
     // Define constants that affect motion
-    this.MAX_SPEED = 250; // pixels/second
-    this.MIN_DISTANCE = 32; // pixels
+    this.MAX_SPEED = 150; // pixels/second
+    this.MIN_DISTANCE = 64; // pixels
 };
 
 // Followers are a type of Phaser.Sprite
